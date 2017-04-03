@@ -144,12 +144,12 @@
     <ClInclude Include="Utils.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="model.fs" />
-    <None Include="model.vs" />
-    <None Include="shaders\specular.fs" />
-    <None Include="shaders\specular.vs" />
-    <None Include="skybox.fs" />
-    <None Include="skybox.vs" />
+    <None Include="assets\shaders\model.fs" />
+    <None Include="assets\shaders\model.vs" />
+    <None Include="assets\shaders\skybox.fs" />
+    <None Include="assets\shaders\skybox.vs" />
+    <None Include="assets\shaders\specular.fs" />
+    <None Include="assets\shaders\specular.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -30,7 +30,9 @@ Camera* camera;
 Light* light;
 GameModel* triangle;
 Cubemap* skybox;
-Model* moaModel;
+
+// Custom models
+Model *Castle, *Nanosuit;
 
 unsigned char KeyCode[255];
 
@@ -38,7 +40,9 @@ void Render();
 void Update();
 void KeyDown(unsigned char key, int x, int y);
 void KeyUp(unsigned char key, int x, int y);
+
 void AnimateModel(GameModel* _model, vec3 _moveDirection);
+void AnimateModel(Model* _model, vec3 _moveDirection);
 
 int main(int argc, char **argv) {
 
@@ -74,9 +78,15 @@ int main(int argc, char **argv) {
 
 	// Model
 	GLuint modelProgram = shaderLoader.CreateProgram("assets/shaders/model.vs", "assets/shaders/model.fs");
-	moaModel = new Model("assets/models/Castle/Castle OBJ.obj", camera, modelProgram);
-	moaModel->SetPosition(vec3(0, -2, 0));
-	moaModel->SetScale(vec3(0.05f));
+	Nanosuit = new Model("assets/models/Nanosuit/nanosuit.obj", camera, modelProgram);
+	Nanosuit->SetPosition(vec3(3, 0, 0));
+	Nanosuit->SetScale(vec3(0.15f));
+
+	Castle = new Model("assets/models/Castle/Castle OBJ.obj", camera, modelProgram);
+	Castle->SetPosition(vec3(0, -2, 0));
+	Castle->SetScale(vec3(0.1f));
+
+	
 
 	// -- Object creation
 
@@ -98,7 +108,8 @@ void Render() {
 
 	skybox->Render();
 	triangle->Render();
-	moaModel->Draw();
+	Castle->Draw();
+	Nanosuit->Draw();
 
 	glutSwapBuffers();
 
@@ -110,6 +121,7 @@ void Update() {
 	deltaTime *= 0.001f;
 
 	triangle->Update(deltaTime);
+	AnimateModel(Nanosuit, vec3(0, 1, 0));
 
 	if (KeyCode[(unsigned char)'q'] == KeyState::Pressed) {
 		light->MoveDown();
@@ -155,6 +167,17 @@ void KeyUp(unsigned char key, int x, int y) {
 // param _moveDirection : The direction of the movement
 void AnimateModel(GameModel* _model, vec3 _moveDirection) {
 	
+
+
+}
+
+// Function AnimateModel
+// Animates the model by moving it in a few spaces in the given direction
+// author : Juan Rodriguez
+// param _model : The game model that will be animated
+// param _moveDirection : The direction of the movement
+void AnimateModel(Model* _model, vec3 _moveDirection) {
+
 
 
 }

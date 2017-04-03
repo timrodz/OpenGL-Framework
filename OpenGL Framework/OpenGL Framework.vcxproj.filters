@@ -73,22 +73,22 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\specular.fs">
+    <None Include="assets\shaders\model.fs">
       <Filter>Resource Files\Shaders</Filter>
     </None>
-    <None Include="shaders\specular.vs">
+    <None Include="assets\shaders\model.vs">
       <Filter>Resource Files\Shaders</Filter>
     </None>
-    <None Include="skybox.fs">
+    <None Include="assets\shaders\skybox.fs">
       <Filter>Resource Files\Shaders</Filter>
     </None>
-    <None Include="skybox.vs">
+    <None Include="assets\shaders\skybox.vs">
       <Filter>Resource Files\Shaders</Filter>
     </None>
-    <None Include="model.fs">
+    <None Include="assets\shaders\specular.fs">
       <Filter>Resource Files\Shaders</Filter>
     </None>
-    <None Include="model.vs">
+    <None Include="assets\shaders\specular.vs">
       <Filter>Resource Files\Shaders</Filter>
     </None>
   </ItemGroup>
