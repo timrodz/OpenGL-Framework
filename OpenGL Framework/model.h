@@ -64,6 +64,14 @@ public:
 
 	}
 
+	glm::vec3 GetPosition() {
+		return this->position;
+	}
+
+	glm::vec3 GetScale() {
+		return this->scale;
+	}
+
 private:
 
 	// Scene editing

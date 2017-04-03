@@ -20,6 +20,9 @@
 #include "Cubemap.h"
 #include "model.h"
 
+#define DOWN 1
+#define UP 0
+
 using std::cout;
 using glm::vec3;
 
@@ -28,7 +31,7 @@ Utils* ut;
 ShaderLoader shaderLoader;
 Camera* camera;
 Light* light;
-GameModel* triangle;
+GameModel* Sphere;
 Cubemap* skybox;
 
 // Custom models
@@ -41,8 +44,8 @@ void Update();
 void KeyDown(unsigned char key, int x, int y);
 void KeyUp(unsigned char key, int x, int y);
 
-void AnimateModel(GameModel* _model, vec3 _moveDirection);
-void AnimateModel(Model* _model, vec3 _moveDirection);
+void AnimateModel(GameModel* _model, vec3 _moveDirection, float _deltaTime);
+void AnimateModel(Model* _model, vec3 _moveDirection, float _deltaTime);
 
 int main(int argc, char **argv) {
 
@@ -67,10 +70,10 @@ int main(int argc, char **argv) {
 	light = new Light(vec3(0, 0, -2), vec3(0.5f, 0.5f, 0.5f));
 
 	GLuint triangleProgram = shaderLoader.CreateProgram("assets/shaders/specular.vs", "assets/shaders/specular.fs");
-	triangle = new GameModel(ModelType::kSphere, camera, "assets/textures/books.jpg", light, 0.65f, 4.3f);
-	triangle->SetProgram(triangleProgram);
-	triangle->SetPosition(vec3(-3, -0.5f, 0));
-	triangle->SetSpeed(0.005f);
+	Sphere = new GameModel(ModelType::kSphere, camera, "assets/textures/books.jpg", light, 0.65f, 4.3f);
+	Sphere->SetProgram(triangleProgram);
+	Sphere->SetPosition(vec3(-6, -0.5f, 0));
+	Sphere->SetSpeed(0.005f);
 
 	// Skybox
 	GLuint cubemapProgram = shaderLoader.CreateProgram("assets/shaders/skybox.vs", "assets/shaders/skybox.fs");
@@ -79,14 +82,14 @@ int main(int argc, char **argv) {
 	// Model
 	GLuint modelProgram = shaderLoader.CreateProgram("assets/shaders/model.vs", "assets/shaders/model.fs");
 	Nanosuit = new Model("assets/models/Nanosuit/nanosuit.obj", camera, modelProgram);
-	Nanosuit->SetPosition(vec3(3, 0, 0));
-	Nanosuit->SetScale(vec3(0.15f));
+	Nanosuit->SetPosition(vec3(-0.05, -2, 2.75));
+	Nanosuit->SetScale(vec3(0.04f));
 
 	Castle = new Model("assets/models/Castle/Castle OBJ.obj", camera, modelProgram);
 	Castle->SetPosition(vec3(0, -2, 0));
 	Castle->SetScale(vec3(0.1f));
 
-	
+
 
 	// -- Object creation
 
@@ -107,7 +110,7 @@ void Render() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	skybox->Render();
-	triangle->Render();
+	Sphere->Render();
 	Castle->Draw();
 	Nanosuit->Draw();
 
@@ -120,27 +123,26 @@ void Update() {
 	GLfloat deltaTime = (GLfloat)glutGet(GLUT_ELAPSED_TIME);
 	deltaTime *= 0.001f;
 
-	triangle->Update(deltaTime);
-	AnimateModel(Nanosuit, vec3(0, 1, 0));
+	Sphere->Update(deltaTime);
 
+	// Light controls
 	if (KeyCode[(unsigned char)'q'] == KeyState::Pressed) {
-		light->MoveDown();
-	}
-	if (KeyCode[(unsigned char)'e'] == KeyState::Pressed) {
 		light->MoveUp();
 	}
-
+	if (KeyCode[(unsigned char)'e'] == KeyState::Pressed) {
+		light->MoveDown();
+	}
 	if (KeyCode[(unsigned char)'a'] == KeyState::Pressed) {
 		light->MoveLeft();
 	}
-	if (KeyCode[(unsigned char)'d'] == KeyState::Pressed) {
+	if (KeyCode[(unsigned char)'d'] == KeyState::Pressed) {
 		light->MoveRight();
 	}
-
 	if (KeyCode[(unsigned char)'w'] == KeyState::Pressed) {
 		light->MoveForward();
 	}
 	if (KeyCode[(unsigned char)'s'] == KeyState::Pressed) {
+
 		light->MoveBackward();
 	}
 
@@ -157,27 +159,5 @@ void KeyUp(unsigned char key, int x, int y) {
 
 	KeyCode[key] = KeyState::Released;
 	cout << "Key Released: " << key << "\n";
-
-}
-
-// Function AnimateModel
-// Animates the model by moving it in a few spaces in the given direction
-// author : Juan Rodriguez
-// param _model : The game model that will be animated
-// param _moveDirection : The direction of the movement
-void AnimateModel(GameModel* _model, vec3 _moveDirection) {
-	
-
-
-}
-
-// Function AnimateModel
-// Animates the model by moving it in a few spaces in the given direction
-// author : Juan Rodriguez
-// param _model : The game model that will be animated
-// param _moveDirection : The direction of the movement
-void AnimateModel(Model* _model, vec3 _moveDirection) {
-
-
 
 }

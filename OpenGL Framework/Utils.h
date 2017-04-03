@@ -15,8 +15,8 @@
 
 // Keyboard callbacks
 enum KeyState {
-	Pressed,
-	Released
+	Released,
+	Pressed
 };
 
 /*
