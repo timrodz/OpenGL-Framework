@@ -15,9 +15,10 @@
 #include <iostream>
 
 #include "Utils.h"
-#include "GameModel.h"
 #include "Camera.h"
+#include "GameModel.h"
 #include "Cubemap.h"
+#include "model.h"
 
 using std::cout;
 using glm::vec3;
@@ -29,6 +30,7 @@ Camera* camera;
 Light* light;
 GameModel* triangle;
 Cubemap* skybox;
+Model* moaModel;
 
 unsigned char KeyCode[255];
 
@@ -56,21 +58,25 @@ int main(int argc, char **argv) {
 
 	glewInit();
 
-	//glewExperimental = true;
-
 	// -- Object creation
 	camera = new Camera(vec3(0, 0, 8), ut->WIDTH, ut->HEIGHT);
 	light = new Light(vec3(0, 0, -2), vec3(0.5f, 0.5f, 0.5f));
 
-	GLuint triangleProgram = shaderLoader.CreateProgram("shaders/specular.vs", "shaders/specular.fs");
-	triangle = new GameModel(ModelType::kSphere, camera, "textures/books.jpg", light, 0.65f, 4.3f);
+	GLuint triangleProgram = shaderLoader.CreateProgram("assets/shaders/specular.vs", "assets/shaders/specular.fs");
+	triangle = new GameModel(ModelType::kSphere, camera, "assets/textures/books.jpg", light, 0.65f, 4.3f);
 	triangle->SetProgram(triangleProgram);
 	triangle->SetPosition(vec3(-3, -0.5f, 0));
 	triangle->SetSpeed(0.005f);
 
 	// Skybox
-	GLuint cubemapProgram = shaderLoader.CreateProgram("shaders/skybox.vs", "shaders/skybox.fs");
+	GLuint cubemapProgram = shaderLoader.CreateProgram("assets/shaders/skybox.vs", "assets/shaders/skybox.fs");
 	skybox = new Cubemap(cubemapProgram, camera);
+
+	// Model
+	GLuint modelProgram = shaderLoader.CreateProgram("assets/shaders/model.vs", "assets/shaders/model.fs");
+	moaModel = new Model("assets/models/Castle/Castle OBJ.obj", camera, modelProgram);
+	moaModel->SetPosition(vec3(0, -2, 0));
+	moaModel->SetScale(vec3(0.05f));
 
 	// -- Object creation
 
@@ -90,8 +96,9 @@ void Render() {
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	triangle->Render();
 	skybox->Render();
+	triangle->Render();
+	moaModel->Draw();
 
 	glutSwapBuffers();
 

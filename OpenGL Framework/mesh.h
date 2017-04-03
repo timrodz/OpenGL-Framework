@@ -6,6 +6,7 @@
 #include <sstream>
 #include <iostream>
 #include <vector>
+
 using namespace std;
 // GL Includes
 
@@ -13,7 +14,6 @@ using namespace std;
 #include "Camera.h"
 
 struct Vertex {
-
 	glm::vec3 Position; // Position	
 	glm::vec3 Normal; // Normal	
 	glm::vec2 TexCoords; // TexCoords
@@ -27,6 +27,7 @@ struct Texture {
 
 class Mesh {
 public:
+
 	/*  Mesh Data  */
 	vector<Vertex> vertices;
 	vector<GLuint> indices;
@@ -35,44 +36,54 @@ public:
 	/*  Functions  */
 	// Constructor
 	Mesh(vector<Vertex> vertices, vector<GLuint> indices, vector<Texture> textures) {
+
 		this->vertices = vertices;
 		this->indices = indices;
 		this->textures = textures;
 		// Now that we have all the required data, set the vertex buffers and its attribute pointers.
 		this->setupMesh();
+
 	}
 
 	// Render the mesh
-	void Draw(Camera* camera, GLuint program) {
+	void Draw(Camera* camera, GLuint program, glm::vec3 _position, glm::vec3 _scale) {
 
 		glUseProgram(program);
-
 
 		// Bind appropriate textures
 		GLuint diffuseNr = 1;
 		GLuint specularNr = 1;
+
 		for (GLuint i = 0; i < this->textures.size(); i++) {
+
 			glActiveTexture(GL_TEXTURE0 + i); // Active proper texture unit before binding
 											  // Retrieve texture number (the N in diffuse_textureN)
 			stringstream ss;
 			string number;
 			string name = this->textures[i].type;
+
 			if (name == "texture_diffuse")
 				ss << diffuseNr++; // Transfer GLuint to stream
+
 			else if (name == "texture_specular")
 				ss << specularNr++; // Transfer GLuint to stream
+
 			number = ss.str();
+
 			// Now set the sampler to the correct texture unit
 			glUniform1i(glGetUniformLocation(program, (name + number).c_str()), i);
+
 			// And finally bind the texture
 			glBindTexture(GL_TEXTURE_2D, this->textures[i].id);
+
 		}
 
 		glm::mat4 model;
 
-		//model = glm::scale(model, glm::vec3(0.250f, 0.250f, 0.250f));
+		model = glm::translate(model, _position);
+		model = glm::scale(model, _scale);
 
-		glm::mat4 mvp = camera->getprojectionMatrix() *  camera->getViewMatrix() * model;
+		glm::mat4 mvp = camera->GetProjectionMatrix() *  camera->GetViewMatrix() * model;
 
 		GLint mvpLoc = glGetUniformLocation(program, "mvp");
 		glUniformMatrix4fv(mvpLoc, 1, GL_FALSE, glm::value_ptr(mvp));

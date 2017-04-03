@@ -1,4 +1,5 @@
 #pragma once
+
 // Std. Includes
 #include <string>
 #include <fstream>
@@ -6,6 +7,7 @@
 #include <iostream>
 #include <map>
 #include <vector>
+
 using namespace std;
 // GL Includes
 
@@ -36,26 +38,45 @@ public:
 		this->program = program;
 		this->camera = camera;
 		this->loadModel(path);
+
 	}
 
 	// Draws the model, and thus all its meshes
 	void Draw() {
+
 		for (GLuint i = 0; i < this->meshes.size(); i++) {
 
-			//printf("mesh size: %d \n", meshes.size());
+			this->meshes[i].Draw(camera, program, position, scale);
 
-			this->meshes[i].Draw(camera, program);
 		}
+
+	}
+
+	void SetPosition(glm::vec3 _position) {
+
+		this->position = _position;
+
+	}
+
+	void SetScale(glm::vec3 _scale) {
+
+		this->scale = _scale;
+
 	}
 
 private:
+
+	// Scene editing
+	glm::vec3 position;
+	glm::vec3 scale;
+
 	/*  Model Data  */
 	vector<Mesh> meshes;
 	string directory;
 	vector<Texture> textures_loaded;	// Stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
 
-										/*  Functions   */
-										// Loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector.
+	/*  Functions   */
+	// Loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector.
 	void loadModel(string path) {
 		// Read file via ASSIMP
 		Assimp::Importer importer;
@@ -100,6 +121,7 @@ private:
 
 		// Walk through each of the mesh's vertices
 		for (GLuint i = 0; i < mesh->mNumVertices; i++) {
+
 			Vertex vertex;
 			glm::vec3 vector; // We declare a placeholder vector since assimp uses its own vector class that doesn't directly convert to glm's vec3 class so we transfer the data to this placeholder glm::vec3 first.
 							  // Positions
@@ -112,6 +134,7 @@ private:
 			vector.y = mesh->mNormals[i].y;
 			vector.z = mesh->mNormals[i].z;
 			vertex.Normal = vector;
+
 			// Texture Coordinates
 			if (mesh->mTextureCoords[0]) // Does the mesh contain texture coordinates?
 			{
@@ -124,17 +147,25 @@ private:
 			}
 			else
 				vertex.TexCoords = glm::vec2(0.0f, 0.0f);
+
 			vertices.push_back(vertex);
+		
 		}
+
 		// Now wak through each of the mesh's faces (a face is a mesh its triangle) and retrieve the corresponding vertex indices.
 		for (GLuint i = 0; i < mesh->mNumFaces; i++) {
+
 			aiFace face = mesh->mFaces[i];
+
 			// Retrieve all indices of the face and store them in the indices vector
 			for (GLuint j = 0; j < face.mNumIndices; j++)
 				indices.push_back(face.mIndices[j]);
+
 		}
+
 		// Process materials
 		if (mesh->mMaterialIndex >= 0) {
+
 			aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 			// We assume a convention for sampler names in the shaders. Each diffuse texture should be named
 			// as 'texture_diffuseN' where N is a sequential number ranging from 1 to MAX_SAMPLER_NUMBER. 
@@ -146,45 +177,62 @@ private:
 			// 1. Diffuse maps
 			vector<Texture> diffuseMaps = this->loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
 			textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
+
 			// 2. Specular maps
 			vector<Texture> specularMaps = this->loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
 			textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
+
 		}
 
 		// Return a mesh object created from the extracted mesh data
 		return Mesh(vertices, indices, textures);
+
 	}
 
 	// Checks all material textures of a given type and loads the textures if they're not loaded yet.
 	// The required info is returned as a Texture struct.
 	vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, string typeName) {
+
 		vector<Texture> textures;
+
 		for (GLuint i = 0; i < mat->GetTextureCount(type); i++) {
+
 			aiString str;
 			mat->GetTexture(type, i, &str);
+
 			// Check if texture was loaded before and if so, continue to next iteration: skip loading a new texture
 			GLboolean skip = false;
+
 			for (GLuint j = 0; j < textures_loaded.size(); j++) {
 				if (textures_loaded[j].path == str) {
 					textures.push_back(textures_loaded[j]);
 					skip = true; // A texture with the same filepath has already been loaded, continue to next one. (optimization)
 					break;
 				}
+
 			}
+
 			if (!skip) {   // If texture hasn't been loaded already, load it
+
 				Texture texture;
 				texture.id = TextureFromFile(str.C_Str(), this->directory);
 				texture.type = typeName;
 				texture.path = str;
 				textures.push_back(texture);
 				this->textures_loaded.push_back(texture);  // Store it as texture loaded for entire model, to ensure we won't unnecesery load duplicate textures.
+
 			}
+
 		}
+
 		return textures;
+
 	}
+
 };
 
 GLint TextureFromFile(const char* path, string directory) {
+
 	//Generate texture ID and load texture data 
 	string filename = string(path);
 	filename = directory + '/' + filename;

@@ -85,5 +85,11 @@
     <None Include="skybox.vs">
       <Filter>Resource Files\Shaders</Filter>
     </None>
+    <None Include="model.fs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="model.vs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

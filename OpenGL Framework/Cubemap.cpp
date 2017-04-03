@@ -72,12 +72,12 @@ Cubemap::Cubemap(GLuint cubemapProgram, Camera* camera)
 
 	// set textures
 	std::vector<const GLchar*> faces;
-	faces.push_back("textures/right.jpg");
-	faces.push_back("textures/left.jpg");
-	faces.push_back("textures/top.jpg");
-	faces.push_back("textures/bottom.jpg");
-	faces.push_back("textures/back.jpg");
-	faces.push_back("textures/front.jpg");
+	faces.push_back("assets/textures/right.jpg");
+	faces.push_back("assets/textures/left.jpg");
+	faces.push_back("assets/textures/top.jpg");
+	faces.push_back("assets/textures/bottom.jpg");
+	faces.push_back("assets/textures/back.jpg");
+	faces.push_back("assets/textures/front.jpg");
 
 	texture = loadCubemap(faces);
 }
