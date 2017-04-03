@@ -55,6 +55,7 @@ int main(int argc, char **argv) {
 	glutInitWindowPosition(GLUT_WINDOW_WIDTH / 2, GLUT_WINDOW_HEIGHT / 2);
 	glutInitWindowSize(ut->WIDTH, ut->HEIGHT);
 	glutCreateWindow("OpenGL Framework - Juan Rodriguez");
+	glutSetOption(GLUT_MULTISAMPLE, 8);
 
 	glClearColor(1.0f, 0.0f, 0.0f, 1.0f);               // Set background color to black and opaque
 	glClearDepth(1.0f);                                 // Set background depth to farthest
@@ -62,6 +63,7 @@ int main(int argc, char **argv) {
 	glDepthFunc(GL_LEQUAL);                             // Set the type of depth-test
 	glShadeModel(GL_SMOOTH);                            // Enable smooth shading
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);  // Nice perspective corrections
+	glEnable(GL_MULTISAMPLE);
 
 	glewInit();
 

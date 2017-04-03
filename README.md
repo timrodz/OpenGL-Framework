@@ -8,10 +8,10 @@ Features:
 - Primitive shape creation (triangle, quad, cube, sphere)
 - Ambient and specular lighting
 - Control the light with the keyboard
-
-To-Do:
 - Model loading through assimp
 - Skybox
+
+To-Do:
 - Stencil
 - Reflection
 - Camera Mouse Controls
