@@ -69,7 +69,7 @@ int main(int argc, char **argv) {
 	triangle->SetSpeed(0.005f);
 
 	// Skybox
-	GLuint cubemapProgram = shaderLoader.CreateProgram("skybox.vs", "skybox.fs");
+	GLuint cubemapProgram = shaderLoader.CreateProgram("shaders/skybox.vs", "shaders/skybox.fs");
 	skybox = new Cubemap(cubemapProgram, camera);
 
 	// -- Object creation
