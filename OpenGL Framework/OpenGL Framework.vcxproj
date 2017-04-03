@@ -124,6 +124,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Cubemap.cpp" />
     <ClCompile Include="GameModel.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="main.cpp" />
@@ -133,6 +134,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Cubemap.h" />
     <ClInclude Include="GameModel.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="mesh.h" />
@@ -144,6 +146,8 @@
   <ItemGroup>
     <None Include="shaders\specular.fs" />
     <None Include="shaders\specular.vs" />
+    <None Include="skybox.fs" />
+    <None Include="skybox.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -17,6 +17,7 @@
 #include "Utils.h"
 #include "GameModel.h"
 #include "Camera.h"
+#include "Cubemap.h"
 
 using std::cout;
 using glm::vec3;
@@ -27,6 +28,7 @@ ShaderLoader shaderLoader;
 Camera* camera;
 Light* light;
 GameModel* triangle;
+Cubemap* skybox;
 
 unsigned char KeyCode[255];
 
@@ -66,6 +68,10 @@ int main(int argc, char **argv) {
 	triangle->SetPosition(vec3(-3, -0.5f, 0));
 	triangle->SetSpeed(0.005f);
 
+	// Skybox
+	GLuint cubemapProgram = shaderLoader.CreateProgram("skybox.vs", "skybox.fs");
+	skybox = new Cubemap(cubemapProgram, camera);
+
 	// -- Object creation
 
 	glutDisplayFunc(Render);
@@ -85,6 +91,7 @@ void Render() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	triangle->Render();
+	skybox->Render();
 
 	glutSwapBuffers();
 

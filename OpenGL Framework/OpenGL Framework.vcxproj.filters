@@ -39,6 +39,9 @@
     <ClCompile Include="Light.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Cubemap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utils.h">
@@ -65,12 +68,21 @@
     <ClInclude Include="Light.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Cubemap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\specular.fs">
       <Filter>Resource Files\Shaders</Filter>
     </None>
     <None Include="shaders\specular.vs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="skybox.fs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="skybox.vs">
       <Filter>Resource Files\Shaders</Filter>
     </None>
   </ItemGroup>
