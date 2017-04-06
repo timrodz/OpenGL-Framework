@@ -68,15 +68,8 @@ int main(int argc, char **argv) {
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);  // Nice perspective corrections
 	glEnable(GL_MULTISAMPLE);
 
-
-
-
-	// Backface culling
-//	glFrontFace(GL_CCW);
-//	glCullFace(GL_BACK);
-//	glEnable(GL_CULL_FACE);
-
-
+	// To test whether backface culling is working
+	// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	glewInit();
 
@@ -150,10 +143,16 @@ void Render() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	skybox->Render();
+
+	// Backface culling for sphere
+	glEnable(GL_CULL_FACE);
+	glFrontFace(GL_CCW);
+	glCullFace(GL_FRONT);
 	Sphere->Render();
+	glDisable(GL_CULL_FACE);
+
 	Castle->Draw();
 	Nanosuit->Draw();
-
 	Cube->RenderStencil(Cube, Mirror, ReflectedCube);
 
 	glutSwapBuffers();

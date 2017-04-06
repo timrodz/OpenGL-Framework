@@ -87,7 +87,7 @@ void GameModel::Update(GLfloat time) {
 void GameModel::Render() {
 
 	glUseProgram(this->program);
-
+	
 	//if(bIsTextureSet)
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texture);
@@ -148,6 +148,8 @@ void GameModel::Render() {
 	glBindVertexArray(vao);
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
+
+	glDisable(GL_CULL_FACE);
 }
 
 void GameModel::RenderStencil(GameModel* Cube, GameModel* Mirror, GameModel* ReflectedCube) {
