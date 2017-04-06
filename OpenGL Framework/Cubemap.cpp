@@ -79,6 +79,13 @@ Cubemap::Cubemap(GLuint cubemapProgram, Camera* camera)
 	faces.push_back("assets/textures/back.jpg");
 	faces.push_back("assets/textures/front.jpg");
 
+	//faces.push_back("assets/textures/MountainPath/posx.jpg");  // right
+	//faces.push_back("assets/textures/MountainPath/negx.jpg");  // left
+	//faces.push_back("assets/textures/MountainPath/posy.jpg");  // top
+	//faces.push_back("assets/textures/MountainPath/negy.jpg");  // bottom
+	//faces.push_back("assets/textures/MountainPath/negz.jpg");  // back
+	//faces.push_back("assets/textures/MountainPath/posz.jpg");  // front
+
 	texture = loadCubemap(faces);
 }
 

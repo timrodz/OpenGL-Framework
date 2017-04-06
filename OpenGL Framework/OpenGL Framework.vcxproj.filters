@@ -91,11 +91,5 @@
     <None Include="assets\shaders\specular.vs">
       <Filter>Resource Files\Shaders</Filter>
     </None>
-    <None Include="assets\shaders\stencil.fs">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="assets\shaders\stencil.vs">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
   </ItemGroup>
 </Project>

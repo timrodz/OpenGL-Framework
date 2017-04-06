@@ -150,8 +150,6 @@
     <None Include="assets\shaders\skybox.vs" />
     <None Include="assets\shaders\specular.fs" />
     <None Include="assets\shaders\specular.vs" />
-    <None Include="assets\shaders\stencil.fs" />
-    <None Include="assets\shaders\stencil.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

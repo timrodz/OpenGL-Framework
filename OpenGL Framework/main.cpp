@@ -76,7 +76,7 @@ int main(int argc, char **argv) {
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);  // Nice perspective corrections
 	
 
-	// To test whether backface culling is working
+	// To test whether backface culling is working, wire draw mode
 	// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		
 	glewInit();
@@ -125,7 +125,7 @@ int main(int argc, char **argv) {
 
 	// Light Sphere
 	GLuint lightSphereProgram = shaderLoader.CreateProgram("assets/shaders/specular.vs", "assets/shaders/specular.fs");
-	LightSphere = new GameModel(ModelType::kSphere, camera, "assets/textures/white.jpg", light, 0.65f, 4.3f);
+	LightSphere = new GameModel(ModelType::kSphere, camera, "assets/textures/white.jpg", light, 3.0f, 4.3f);
 	LightSphere->SetProgram(lightSphereProgram);
 	LightSphere->SetPosition(light->GetPosition());
 	LightSphere->SetSpeed(0.005f);
@@ -196,42 +196,42 @@ void Update() {
 
 
 	// Light controls
-	if (KeyCode[(unsigned char)'q'] == KeyState::Pressed) {
+	if ((KeyCode[(unsigned char)'q'] == KeyState::Pressed) || (KeyCode[(unsigned char)'Q'] == KeyState::Pressed)) {
 		light->MoveUp();
 	}
-	if (KeyCode[(unsigned char)'e'] == KeyState::Pressed) {
+	if ((KeyCode[(unsigned char)'e'] == KeyState::Pressed) || (KeyCode[(unsigned char)'E'] == KeyState::Pressed)) {
 		light->MoveDown();
 	}
-	if (KeyCode[(unsigned char)'a'] == KeyState::Pressed) {
+	if ((KeyCode[(unsigned char)'a'] == KeyState::Pressed) || (KeyCode[(unsigned char)'A'] == KeyState::Pressed)) {
 		light->MoveLeft();
 	}
-	if (KeyCode[(unsigned char)'d'] == KeyState::Pressed) {
+	if ((KeyCode[(unsigned char)'d'] == KeyState::Pressed) || (KeyCode[(unsigned char)'D'] == KeyState::Pressed)) {
 		light->MoveRight();
 	}
-	if (KeyCode[(unsigned char)'w'] == KeyState::Pressed) {
+	if ((KeyCode[(unsigned char)'w'] == KeyState::Pressed) || (KeyCode[(unsigned char)'W'] == KeyState::Pressed)) {
 		light->MoveForward();
 	}
-	if (KeyCode[(unsigned char)'s'] == KeyState::Pressed) {
+	if ((KeyCode[(unsigned char)'s'] == KeyState::Pressed) || (KeyCode[(unsigned char)'S'] == KeyState::Pressed)) {
 		light->MoveBackward();
 	}
 
 	// Camera controls
-	if (KeyCode[(unsigned char)'u'] == KeyState::Pressed) {
+	if ((KeyCode[(unsigned char)'u'] == KeyState::Pressed) || (KeyCode[(unsigned char)'U'] == KeyState::Pressed)) {
 		camera->MoveUp();
 	}
-	if (KeyCode[(unsigned char)'o'] == KeyState::Pressed) {
+	if ((KeyCode[(unsigned char)'o'] == KeyState::Pressed) || (KeyCode[(unsigned char)'O'] == KeyState::Pressed)) {
 		camera->MoveDown();
 	}
-	if (KeyCode[(unsigned char)'j'] == KeyState::Pressed) {
+	if ((KeyCode[(unsigned char)'j'] == KeyState::Pressed) || (KeyCode[(unsigned char)'J'] == KeyState::Pressed)) {
 		camera->MoveLeft();
 	}
-	if (KeyCode[(unsigned char)'l'] == KeyState::Pressed) {
+	if ((KeyCode[(unsigned char)'l'] == KeyState::Pressed) || (KeyCode[(unsigned char)'L'] == KeyState::Pressed)) {
 		camera->MoveRight();
 	}
-	if (KeyCode[(unsigned char)'i'] == KeyState::Pressed) {
+	if ((KeyCode[(unsigned char)'i'] == KeyState::Pressed) || (KeyCode[(unsigned char)'I'] == KeyState::Pressed)) {
 		camera->MoveForward();
 	}
-	if (KeyCode[(unsigned char)'k'] == KeyState::Pressed) {
+	if ((KeyCode[(unsigned char)'k'] == KeyState::Pressed) || (KeyCode[(unsigned char)'K'] == KeyState::Pressed)) {
 		camera->MoveBackward();
 	}
 
@@ -239,6 +239,7 @@ void Update() {
 	if (KeyCode[(unsigned char)'v'] == KeyState::Pressed) {
 		WireDraw = true;	
 	}
+
 	if (KeyCode[(unsigned char)'v'] == KeyState::Released) {
 		WireDraw = false;
 	}
@@ -252,7 +253,7 @@ void Update() {
 	}
 
 	// Reset
-	if (KeyCode[(unsigned char)'r'] == KeyState::Pressed) {
+	if ((KeyCode[(unsigned char)'r'] == KeyState::Pressed) || (KeyCode[(unsigned char)'R'] == KeyState::Pressed)) {
 		camera->SetPosition(vec3(0, 0, 8));
 		light->SetPosition(vec3(0, 0, 0));
 	}
