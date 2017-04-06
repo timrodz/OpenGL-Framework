@@ -257,8 +257,6 @@ void Update() {
 		camera->SetPosition(vec3(0, 0, 8));
 		light->SetPosition(vec3(0, 0, 0));
 	}
-
-
 }
 
 void KeyDown(unsigned char key, int x, int y) {
