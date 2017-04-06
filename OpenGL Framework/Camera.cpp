@@ -78,6 +78,10 @@ void Camera::SetSpeed(float _speed) {
 	this->speed = _speed;
 }
 
+void Camera::SetPosition(glm::vec3 newPosition) {
+	position = newPosition;
+}
+
 void Camera::MoveForward() {
 	
 	position -= glm::vec3(0.0f, 0.0f, 1.0f) * speed;

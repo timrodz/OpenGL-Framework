@@ -14,6 +14,7 @@ public:
 	glm::vec3 GetPosition() const;
 
 	void SetSpeed(float _speed);
+	void SetPosition(glm::vec3 position);
 
 	void MoveForward();
 	void MoveBackward();

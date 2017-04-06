@@ -45,6 +45,7 @@ Model *Castle, *Nanosuit;
 unsigned char KeyCode[255];
 bool WireDraw = false;
 bool Culling = true;
+bool AntiA = true;
 
 void Render();
 void Update();
@@ -58,11 +59,14 @@ int main(int argc, char **argv) {
 
 	// init glut
 	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
+	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA | GLUT_MULTISAMPLE);
+//	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowPosition(GLUT_WINDOW_WIDTH / 2, GLUT_WINDOW_HEIGHT / 2);
 	glutInitWindowSize(ut->WIDTH, ut->HEIGHT);
-	glutCreateWindow("OpenGL Framework - Juan Rodriguez");
 	glutSetOption(GLUT_MULTISAMPLE, 8);
+	glEnable(GL_MULTISAMPLE);
+	glutCreateWindow("Advanced Graphics - Summative 1 - Juan Rodriguez and Mitchell Currie");
+	
 
 	glClearColor(1.0f, 0.0f, 0.0f, 1.0f);               // Set background color to black and opaque
 	glClearDepth(1.0f);                                 // Set background depth to farthest
@@ -70,7 +74,7 @@ int main(int argc, char **argv) {
 	glDepthFunc(GL_LEQUAL);                             // Set the type of depth-test
 	glShadeModel(GL_SMOOTH);                            // Enable smooth shading
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);  // Nice perspective corrections
-	glEnable(GL_MULTISAMPLE);
+	
 
 	// To test whether backface culling is working
 	// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -246,6 +250,13 @@ void Update() {
 	if (KeyCode[(unsigned char)'c'] == KeyState::Released) {
 		Culling = true;
 	}
+
+	// Reset
+	if (KeyCode[(unsigned char)'r'] == KeyState::Pressed) {
+		camera->SetPosition(vec3(0, 0, 8));
+		light->SetPosition(vec3(0, 0, 0));
+	}
+
 
 }
 
