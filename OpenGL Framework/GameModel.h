@@ -12,6 +12,7 @@ public:
 
 	void Update(GLfloat time);
 	void Render();
+	void RenderStencil();
 
 	void SetPosition(glm::vec3 _position);
 	void SetScale(glm::vec3 _scale);

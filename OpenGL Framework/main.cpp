@@ -33,6 +33,7 @@ Camera* camera;
 Light* light;
 GameModel* Sphere;
 Cubemap* skybox;
+GameModel* Cube;
 
 // Custom models
 Model *Castle, *Nanosuit;
@@ -65,6 +66,16 @@ int main(int argc, char **argv) {
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);  // Nice perspective corrections
 	glEnable(GL_MULTISAMPLE);
 
+
+
+
+	// Backface culling
+//	glFrontFace(GL_CCW);
+//	glCullFace(GL_BACK);
+//	glEnable(GL_CULL_FACE);
+
+
+
 	glewInit();
 
 	// -- Object creation
@@ -81,6 +92,15 @@ int main(int argc, char **argv) {
 	GLuint cubemapProgram = shaderLoader.CreateProgram("assets/shaders/skybox.vs", "assets/shaders/skybox.fs");
 	skybox = new Cubemap(cubemapProgram, camera);
 
+	// Cube
+	GLuint cubeProgram = shaderLoader.CreateProgram("assets/shaders/specular.vs", "assets/shaders/specular.fs");
+	Cube = new GameModel(ModelType::kCube, camera, "assets/textures/triangle.jpg", light, 0.65f, 4.3f);
+	Cube->SetProgram(cubeProgram);
+	Cube->SetPosition(vec3(6, -0.5f, 0));
+	Cube->SetSpeed(0.005f);
+	Cube->SetScale(vec3(0.7f, 0.7f, 0.7f));
+
+	
 	// Model
 	GLuint modelProgram = shaderLoader.CreateProgram("assets/shaders/model.vs", "assets/shaders/model.fs");
 	Nanosuit = new Model("assets/models/Nanosuit/nanosuit.obj", camera, modelProgram);
@@ -113,8 +133,11 @@ void Render() {
 
 	skybox->Render();
 	Sphere->Render();
+	Cube->Render();
 	Castle->Draw();
 	Nanosuit->Draw();
+
+	Cube->RenderStencil();
 
 	glutSwapBuffers();
 
@@ -126,6 +149,7 @@ void Update() {
 	deltaTime *= 0.001f;
 
 	Sphere->Update(deltaTime);
+	Cube->Update(deltaTime);
 
 	// Light controls
 	if (KeyCode[(unsigned char)'q'] == KeyState::Pressed) {
@@ -137,7 +161,8 @@ void Update() {
 	if (KeyCode[(unsigned char)'a'] == KeyState::Pressed) {
 		light->MoveLeft();
 	}
-	if (KeyCode[(unsigned char)'d'] == KeyState::Pressed) {
+	if (KeyCode[(unsigned char)'d'] == KeyState::Pressed) {
+
 		light->MoveRight();
 	}
 	if (KeyCode[(unsigned char)'w'] == KeyState::Pressed) {

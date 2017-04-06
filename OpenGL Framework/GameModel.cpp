@@ -150,6 +150,99 @@ void GameModel::Render() {
 	glBindVertexArray(0);
 }
 
+void GameModel::RenderStencil() {
+
+	glUseProgram(this->program);
+	glEnable(GL_STENCIL_TEST);
+
+
+
+	// Draw floor
+	glStencilFunc(GL_ALWAYS, 1, 0xFF); // Set any stencil to 1
+	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+	glStencilMask(0xFF); // Write to stencil buffer
+	glDepthMask(GL_FALSE); // Don't write to depth buffer
+	glClear(GL_STENCIL_BUFFER_BIT); // Clear stencil buffer (0 by default)
+
+	glDrawArrays(GL_TRIANGLES, 36, 6);
+
+
+	// Draw cube reflection
+	glStencilFunc(GL_EQUAL, 1, 0xFF); // Pass test if stencil value is 1
+	glStencilMask(0x00); // Don't write anything to stencil buffer
+	glDepthMask(GL_TRUE); // Write to depth buffer
+
+
+	//if(bIsTextureSet)
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glUniform1i(glGetUniformLocation(program, "Texture"), 0);
+
+	glm::mat4 model, view, projection;
+	model = glm::translate(model, position);
+
+	model = glm::translate(model, glm::vec3(0.0f * this->scale.x, 0.0f * scale.y, 0.0f));
+	model = glm::rotate(model, glm::radians(angle.x), glm::vec3(1.0, 0.0, 0.0));
+	model = glm::rotate(model, glm::radians(angle.y), glm::vec3(0.0, 1.0, 0.0));
+	model = glm::rotate(model, glm::radians(angle.z), glm::vec3(0.0, 0.0, 1.0));
+	model = glm::translate(model, glm::vec3(-0.0f * scale.x, -0.0f * scale.y, 0.0f));
+
+	model = glm::scale(model, scale);
+
+	// Stencil stuff
+	model = glm::scale(
+		glm::translate(model, glm::vec3(0, 0, -1)),
+		glm::vec3(1, 1, -1)
+	);
+
+	//glm::mat4 vp = camera->GetProjectionMatrix() * camera->GetViewMatrix();
+	//GLint vpLoc = glGetUniformLocation(program, "vp");
+	//glUniformMatrix4fv(vpLoc, 1, GL_FALSE, glm::value_ptr(vp));
+	// Transformation matrices
+
+
+	view = this->camera->GetViewMatrix();
+	projection = this->camera->GetProjectionMatrix();
+
+	// Get their uniform location
+	GLint viewLoc = glGetUniformLocation(program, "view");
+	GLint projLoc = glGetUniformLocation(program, "projection");
+
+	// Pass them to the shaders
+	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
+
+	GLint modelLoc = glGetUniformLocation(program, "model");
+	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+
+
+	// lighting calculations
+
+	GLint objColorLoc = glGetUniformLocation(program, "objectColor");
+	glUniform3f(objColorLoc, color.x, color.y, color.z);
+
+	GLuint cameraPosLoc = glGetUniformLocation(program, "viewPosition");
+	glUniform3f(cameraPosLoc, camera->GetPosition().x, camera->GetPosition().y, camera->GetPosition().z);
+
+	GLuint lightPosLoc = glGetUniformLocation(program, "lightPosition");
+	glUniform3f(lightPosLoc, this->light->GetPosition().x, this->light->GetPosition().y, this->light->GetPosition().z);
+
+	GLuint lightColorLoc = glGetUniformLocation(program, "lightColor");
+	glUniform3f(lightColorLoc, this->light->GetColor().x, this->light->GetColor().y, this->light->GetColor().z);
+
+	GLuint specularStrengthLoc = glGetUniformLocation(program, "specularStrength");
+	glUniform1f(specularStrengthLoc, specularStrength);
+
+	GLuint ambientStrengthLoc = glGetUniformLocation(program, "ambientStrength");
+	glUniform1f(ambientStrengthLoc, ambientStrength);
+
+	glBindVertexArray(vao);
+	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+	glBindVertexArray(0);
+
+	glDisable(GL_STENCIL_TEST);
+}
+
 //movement
 void GameModel::MoveForward() {
 
