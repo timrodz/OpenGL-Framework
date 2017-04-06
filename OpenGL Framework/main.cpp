@@ -19,6 +19,7 @@
 #include "GameModel.h"
 #include "Cubemap.h"
 #include "model.h"
+#include <string>
 
 #define DOWN 1
 #define UP 0
@@ -36,11 +37,14 @@ Cubemap* skybox;
 GameModel* Cube;
 GameModel* Mirror;
 GameModel* ReflectedCube;
+GameModel* LightSphere;
 
 // Custom models
 Model *Castle, *Nanosuit;
 
 unsigned char KeyCode[255];
+bool WireDraw = false;
+bool Culling = true;
 
 void Render();
 void Update();
@@ -70,14 +74,16 @@ int main(int argc, char **argv) {
 
 	// To test whether backface culling is working
 	// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
+		
 	glewInit();
 
 	// -- Object creation
 	camera = new Camera(vec3(0, 0, 8), ut->WIDTH, ut->HEIGHT);
 	camera->SetSpeed(0.03f);
-	light = new Light(vec3(0, 0, -2), vec3(0.5f, 0.5f, 0.5f));
+	light = new Light(vec3(0, 0, 0), vec3(0.5f, 0.5f, 0.5f));
+	light->SetSpeed(0.04f);
 
+	// Sphere
 	GLuint triangleProgram = shaderLoader.CreateProgram("assets/shaders/specular.vs", "assets/shaders/specular.fs");
 	Sphere = new GameModel(ModelType::kSphere, camera, "assets/textures/books.jpg", light, 0.65f, 4.3f);
 	Sphere->SetProgram(triangleProgram);
@@ -113,7 +119,14 @@ int main(int argc, char **argv) {
 	Mirror->Rotate(vec3(90.0f, 0.0f, 0.0f));
 	Mirror->SetScale(vec3(2.5f, 2.5f, 2.5f));
 
-	
+	// Light Sphere
+	GLuint lightSphereProgram = shaderLoader.CreateProgram("assets/shaders/specular.vs", "assets/shaders/specular.fs");
+	LightSphere = new GameModel(ModelType::kSphere, camera, "assets/textures/white.jpg", light, 0.65f, 4.3f);
+	LightSphere->SetProgram(lightSphereProgram);
+	LightSphere->SetPosition(light->GetPosition());
+	LightSphere->SetSpeed(0.005f);
+	LightSphere->SetScale(vec3(0.2f, 0.2f, 0.2f));
+
 	// Model
 	GLuint modelProgram = shaderLoader.CreateProgram("assets/shaders/model.vs", "assets/shaders/model.fs");
 	Nanosuit = new Model("assets/models/Nanosuit/nanosuit.obj", camera, modelProgram);
@@ -145,7 +158,9 @@ void Render() {
 	skybox->Render();
 
 	// Backface culling for sphere
-	glEnable(GL_CULL_FACE);
+	if (Culling)
+		glEnable(GL_CULL_FACE);
+			
 	glFrontFace(GL_CCW);
 	glCullFace(GL_FRONT);
 	Sphere->Render();
@@ -154,6 +169,8 @@ void Render() {
 	Castle->Draw();
 	Nanosuit->Draw();
 	Cube->RenderStencil(Cube, Mirror, ReflectedCube);
+
+	LightSphere->Render();
 
 	glutSwapBuffers();
 
@@ -164,8 +181,15 @@ void Update() {
 	GLfloat deltaTime = (GLfloat)glutGet(GLUT_ELAPSED_TIME);
 	deltaTime *= 0.001f;
 
+	if (WireDraw)
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	else
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
 	Sphere->Update(deltaTime);
 	Cube->Update(deltaTime);
+	LightSphere->SetPosition(light->GetPosition());
+
 
 	// Light controls
 	if (KeyCode[(unsigned char)'q'] == KeyState::Pressed) {
@@ -205,6 +229,22 @@ void Update() {
 	}
 	if (KeyCode[(unsigned char)'k'] == KeyState::Pressed) {
 		camera->MoveBackward();
+	}
+
+	// Wire draw
+	if (KeyCode[(unsigned char)'v'] == KeyState::Pressed) {
+		WireDraw = true;	
+	}
+	if (KeyCode[(unsigned char)'v'] == KeyState::Released) {
+		WireDraw = false;
+	}
+
+	// Culling
+	if (KeyCode[(unsigned char)'c'] == KeyState::Pressed) {
+		Culling = false;
+	}
+	if (KeyCode[(unsigned char)'c'] == KeyState::Released) {
+		Culling = true;
 	}
 
 }
