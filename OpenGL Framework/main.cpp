@@ -34,6 +34,8 @@ Light* light;
 GameModel* Sphere;
 Cubemap* skybox;
 GameModel* Cube;
+GameModel* Mirror;
+GameModel* ReflectedCube;
 
 // Custom models
 Model *Castle, *Nanosuit;
@@ -80,6 +82,7 @@ int main(int argc, char **argv) {
 
 	// -- Object creation
 	camera = new Camera(vec3(0, 0, 8), ut->WIDTH, ut->HEIGHT);
+	camera->SetSpeed(0.03f);
 	light = new Light(vec3(0, 0, -2), vec3(0.5f, 0.5f, 0.5f));
 
 	GLuint triangleProgram = shaderLoader.CreateProgram("assets/shaders/specular.vs", "assets/shaders/specular.fs");
@@ -100,6 +103,23 @@ int main(int argc, char **argv) {
 	Cube->SetSpeed(0.005f);
 	Cube->SetScale(vec3(0.7f, 0.7f, 0.7f));
 
+	// Reflected Cube
+	GLuint refCubeProgram = shaderLoader.CreateProgram("assets/shaders/specular.vs", "assets/shaders/specular.fs");
+	ReflectedCube = new GameModel(ModelType::kCube, camera, "assets/textures/triangle.jpg", light, 0.2f, 0.5f);
+	ReflectedCube->SetProgram(refCubeProgram);
+	ReflectedCube->SetPosition(vec3(6, -1.9f, 0));
+	ReflectedCube->SetSpeed(0.005f);
+	ReflectedCube->SetScale(vec3(0.7f, 0.7f, 0.7f));
+
+	// Mirror
+	GLuint mirrorProgram = shaderLoader.CreateProgram("assets/shaders/specular.vs", "assets/shaders/specular.fs");
+	Mirror = new GameModel(ModelType::kQuad, camera, "assets/textures/black.jpg", light, 0.65f, 4.3f);
+	Mirror->SetProgram(mirrorProgram);
+	Mirror->SetPosition(vec3(6, -1.2f, 0));
+	//Mirror->SetSpeed(0.0f);
+	Mirror->Rotate(vec3(90.0f, 0.0f, 0.0f));
+	Mirror->SetScale(vec3(2.5f, 2.5f, 2.5f));
+
 	
 	// Model
 	GLuint modelProgram = shaderLoader.CreateProgram("assets/shaders/model.vs", "assets/shaders/model.fs");
@@ -110,8 +130,6 @@ int main(int argc, char **argv) {
 	Castle = new Model("assets/models/Castle/Castle OBJ.obj", camera, modelProgram);
 	Castle->SetPosition(vec3(0, -2, 0));
 	Castle->SetScale(vec3(0.1f));
-
-
 
 	// -- Object creation
 
@@ -133,11 +151,10 @@ void Render() {
 
 	skybox->Render();
 	Sphere->Render();
-	Cube->Render();
 	Castle->Draw();
 	Nanosuit->Draw();
 
-	Cube->RenderStencil();
+	Cube->RenderStencil(Cube, Mirror, ReflectedCube);
 
 	glutSwapBuffers();
 
@@ -162,15 +179,33 @@ void Update() {
 		light->MoveLeft();
 	}
 	if (KeyCode[(unsigned char)'d'] == KeyState::Pressed) {
-
 		light->MoveRight();
 	}
 	if (KeyCode[(unsigned char)'w'] == KeyState::Pressed) {
 		light->MoveForward();
 	}
 	if (KeyCode[(unsigned char)'s'] == KeyState::Pressed) {
-
 		light->MoveBackward();
+	}
+
+	// Camera controls
+	if (KeyCode[(unsigned char)'u'] == KeyState::Pressed) {
+		camera->MoveUp();
+	}
+	if (KeyCode[(unsigned char)'o'] == KeyState::Pressed) {
+		camera->MoveDown();
+	}
+	if (KeyCode[(unsigned char)'j'] == KeyState::Pressed) {
+		camera->MoveLeft();
+	}
+	if (KeyCode[(unsigned char)'l'] == KeyState::Pressed) {
+		camera->MoveRight();
+	}
+	if (KeyCode[(unsigned char)'i'] == KeyState::Pressed) {
+		camera->MoveForward();
+	}
+	if (KeyCode[(unsigned char)'k'] == KeyState::Pressed) {
+		camera->MoveBackward();
 	}
 
 }
@@ -188,3 +223,23 @@ void KeyUp(unsigned char key, int x, int y) {
 	cout << "Key Released: " << key << "\n";
 
 }
+
+//// Mouse movement
+//glm::vec2 m_MousePos;
+//void MouseGL(int button, int state, int x, int y)
+//{
+//	m_MousePos = glm::ivec2(x, y);
+//}
+//
+//void MotionGL(int x, int y)
+//{
+//	glm::ivec2 mousePos = glm::ivec2(x, y);
+//	glm::vec2 delta = glm::vec2(mousePos) - m_MousePos;
+//	m_MousePos = mousePos;
+//
+//	glm::quat rotX = glm::angleAxis<float>(glm::radians(delta.y) * 0.5f, glm::vec3(1, 0, 0));
+//	glm::quat rotY = glm::angleAxis<float>(glm::radians(delta.x) * 0.5f, glm::vec3(0, 1, 0));
+//
+//	//camera.Rotate(-rotX * -rotY);
+//
+//}

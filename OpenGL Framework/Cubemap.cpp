@@ -126,11 +126,9 @@ void Cubemap::Render()
 	glUniform1i(glGetUniformLocation(program, "cubeSampler"), 0);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, texture);
 
-	glm::mat4 world;
-	world = glm::scale(world, glm::vec3(10.0f, 10.0f, 10.0f));
-
 	glm::mat4 mvp;
-	mvp = camera->GetProjectionMatrix() * camera->GetViewMatrix() * world;
+	glm::mat4 view = glm::mat4(glm::mat3(camera->GetViewMatrix()));
+	mvp = camera->GetProjectionMatrix() * view;
 	glUniformMatrix4fv(glGetUniformLocation(program, "mvp"), 1, GL_FALSE, glm::value_ptr(mvp));
 
 	glDrawArrays(GL_TRIANGLES, 0, 36);
